@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="bkB0dx7bsq1goouGa0cO">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="580" width="980" x="10" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-20" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.4_point_star_2;dx=0.8;" value="" vertex="1">
+          <mxGeometry height="100" width="100" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-24" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Ảnh 1" vertex="1">
+          <mxGeometry height="200" width="200" x="40" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-25" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Ảnh 2" vertex="1">
+          <mxGeometry height="200" width="200" x="280" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="List xe" vertex="1">
+          <mxGeometry height="410" width="200" x="770" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Thông tin xe" vertex="1">
+          <mxGeometry height="200" width="200" x="520" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Bảng điều khiển" vertex="1">
+          <mxGeometry height="160" width="680" x="40" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-41" parent="1" style="text;strokeColor=none;fillColor=none;html=1;fontSize=27;fontStyle=1;verticalAlign=middle;align=center;autosizeText=1;" value="Smart parking system with AI and Dashboard" vertex="1">
+          <mxGeometry height="40" width="610" x="190" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-43" parent="1" style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=img/clipart/Gear_128x128.png" value="" vertex="1">
+          <mxGeometry height="80.5" width="68.62" x="850" y="39.75" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
