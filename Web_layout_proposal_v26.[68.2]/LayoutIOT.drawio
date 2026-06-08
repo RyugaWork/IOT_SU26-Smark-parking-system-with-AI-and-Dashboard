@@ -1,0 +1,37 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="bkB0dx7bsq1goouGa0cO">
+    <mxGraphModel dx="1030" dy="626" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="580" width="980" x="10" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-20" parent="1" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.4_point_star_2;dx=0.8;" value="" vertex="1">
+          <mxGeometry height="100" width="100" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-24" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;" value="Ảnh xe đi vào" vertex="1">
+          <mxGeometry height="200" width="200" x="40" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-25" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;" value="Ảnh xe đi ra" vertex="1">
+          <mxGeometry height="200" width="200" x="280" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-27" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;align=left;" value="&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;&gt;List xe:&lt;br&gt;_ Biển số&lt;div&gt;_ Loại xe&lt;/div&gt;&lt;div&gt;_ Thời gian vào ra&lt;/div&gt;&lt;/blockquote&gt;" vertex="1">
+          <mxGeometry height="410" width="200" x="770" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Thông tin xe:&lt;div&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;_ Biển số&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;_ Loại xe (xe đạp, xe máy, oto)&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;_ Loại xe (BMW, SH, Vision)&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;_ Thời gian ra/vào&lt;br&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;_ Người điều khiển (tên / giới tính)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="200" width="200" x="520" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;&gt;Bảng điều khiển:&lt;br&gt;_ Báo động&lt;br&gt;_ Đóng/mở cổng&lt;div&gt;_ Phát thông báo&lt;/div&gt;&lt;div&gt;_ Quét kim loại&lt;/div&gt;&lt;div&gt;_ Quét thân nhiệt&lt;/div&gt;&lt;div&gt;_ Tích điểm&lt;/div&gt;&lt;div&gt;_ Nhận dạng tội phạm đang bị truy nã&lt;/div&gt;&lt;div&gt;_ Nhận dạng xe ko được sử dụng theo pháp luật (xe tự chế, xe ko có giầy tờ, xe đảm bảo tiêu chuẩn)&lt;/div&gt;&lt;div&gt;_ Phát thời sự, Dự báo thời tiết&lt;/div&gt;&lt;div&gt;_ Xoá/thêm xe vào list&lt;/div&gt;&lt;/blockquote&gt;" vertex="1">
+          <mxGeometry height="170" width="680" x="40" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-41" parent="1" style="text;strokeColor=none;fillColor=none;html=1;fontSize=27;fontStyle=1;verticalAlign=middle;align=center;autosizeText=1;" value="Smart parking system with AI and Dashboard" vertex="1">
+          <mxGeometry height="40" width="610" x="190" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XBQkpbimC2K6ck8LPYuF-43" parent="1" style="shape=image;html=1;verticalLabelPosition=bottom;verticalAlign=top;imageAspect=1;aspect=fixed;image=img/clipart/Gear_128x128.png" value="" vertex="1">
+          <mxGeometry height="80.5" width="68.62" x="850" y="39.75" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
