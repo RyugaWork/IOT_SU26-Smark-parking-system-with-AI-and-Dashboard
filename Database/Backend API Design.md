@@ -1,47 +1,396 @@
-1. Kiến trúc Backend API đề xuất
+Mục tiêu backend:
 
-Backend nên đóng vai trò trung tâm giữa ESP32-CAM, AI YOLO, SQL Server và Web Dashboard.
+FastAPI Backend sẽ là trung tâm xử lý giữa:
+ESP32-CAM -> AI YOLO -> SQL Server -> Web Dashboard -> Arduino/ESP32 điều khiển servo
 
-Luồng tổng quát:
+Backend không trực tiếp train YOLO. Backend chỉ nhận ảnh, lưu metadata, nhận kết quả detection, lưu lịch sử xe, lưu sensor reading, lưu trạng thái cổng và phân phối lệnh mở/đóng cổng cho Arduino/ESP32.
 
-ESP32-CAM 
-   -> upload image 
-   -> FastAPI lưu ảnh vào /uploads
-   -> FastAPI lưu image_path vào SQL Server
-   -> AI Compute Module lấy ảnh hoặc nhận image_id
-   -> YOLO detect
-   -> AI gửi detection result về FastAPI
-   -> FastAPI lưu kết quả AI + vehicle event + gate command
-   -> Dashboard gọi REST API để xem lịch sử, trạng thái cổng
-   -> Arduino/ESP32 polling API để lấy lệnh OPEN/CLOSE
+1. Cấu trúc project backend chính thức
+smart-parking-backend/
+│
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   │
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   └── security.py
+│   │
+│   ├── database.py
+│   │
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── camera_image.py
+│   │   ├── ai_detection.py
+│   │   ├── vehicle_event.py
+│   │   ├── gate.py
+│   │   ├── gate_command.py
+│   │   └── sensor_reading.py
+│   │
+│   ├── schemas/
+│   │   ├── __init__.py
+│   │   ├── dashboard_schema.py
+│   │   ├── detection_schema.py
+│   │   ├── gate_schema.py
+│   │   ├── sensor_schema.py
+│   │   ├── image_schema.py
+│   │   └── vehicle_event_schema.py
+│   │
+│   ├── api/
+│   │   ├── __init__.py
+│   │   └── v1/
+│   │       ├── __init__.py
+│   │       ├── dashboard_routes.py
+│   │       ├── image_routes.py
+│   │       ├── detection_routes.py
+│   │       ├── vehicle_event_routes.py
+│   │       ├── gate_routes.py
+│   │       └── sensor_routes.py
+│   │
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── dashboard_service.py
+│   │   ├── image_service.py
+│   │   ├── detection_service.py
+│   │   ├── vehicle_event_service.py
+│   │   ├── gate_service.py
+│   │   └── sensor_service.py
+│   │
+│   └── utils/
+│       ├── __init__.py
+│       └── file_helper.py
+│
+├── uploads/
+│   ├── entry/
+│   ├── exit/
+│   └── detection/
+│
+├── .env
+├── requirements.txt
+└── README.md
+2. Kiến trúc xử lý backend
 
-FastAPI phù hợp vì hỗ trợ API Python tốt, có thể nhận file upload bằng UploadFile; file và form-data được gửi theo dạng multipart/form-data, và nếu nhận file/form thì cần cài python-multipart.
+Backend chia thành 5 layer:
 
-2. Danh sách API endpoints
-Nhóm	Endpoint	Method	Mục đích
-Image	/api/v1/images/upload	POST	ESP32-CAM upload ảnh
-Detection	/api/v1/detections	POST	AI Module gửi kết quả YOLO
-Vehicle Events	/api/v1/vehicle-events	GET	Dashboard lấy lịch sử xe vào/ra
-Gate Status	/api/v1/gates/status	GET	Dashboard lấy trạng thái tất cả cổng
-Gate Status	/api/v1/gates/{gate_id}/status	GET	Lấy trạng thái một cổng
-Gate Command	/api/v1/gates/{gate_id}/commands	POST	Dashboard gửi lệnh OPEN/CLOSE
-Device Polling	/api/v1/devices/{device_id}/commands/pending	GET	Arduino/ESP32 lấy lệnh chờ xử lý
-Device Ack	/api/v1/gate-commands/{command_id}/ack	PUT	Arduino/ESP32 xác nhận đã xử lý lệnh
-Sensor	/api/v1/sensors/readings	POST	Lưu dữ liệu ultrasonic sensor
-Gate Log	/api/v1/gate-command-logs	POST	Lưu log lệnh mở/đóng cổng
-3. API chi tiết
-3.1. ESP32-CAM upload image
+Client / Device
+    ↓
+API Routes
+    ↓
+Schemas
+    ↓
+Services
+    ↓
+Models + Database
+
+Ý nghĩa từng layer:
+
+api/v1/:
+- Khai báo endpoint.
+- Nhận request từ ESP32-CAM, AI Module, Dashboard, Arduino.
+- Không viết logic phức tạp ở đây.
+
+schemas/:
+- Định nghĩa request body và response body.
+- Validate dữ liệu đầu vào.
+
+services/:
+- Xử lý business logic.
+- Ví dụ: nếu detection hợp lệ thì tạo vehicle_event và gate_command OPEN.
+
+models/:
+- Mapping với bảng SQL Server bằng SQLAlchemy ORM.
+
+database.py:
+- Kết nối SQL Server.
+- Tạo session database.
+
+utils/:
+- Hàm phụ trợ, ví dụ tạo tên file ảnh, lưu ảnh, kiểm tra extension.
+3. Luồng dữ liệu tổng thể
+3.1. Luồng xe vào
+1. Ultrasonic sensor ở cổng vào phát hiện vật thể.
+2. Arduino gửi tín hiệu cho ESP32-CAM chụp ảnh.
+3. ESP32-CAM upload ảnh lên FastAPI:
+   POST /api/v1/images/upload
+
+4. FastAPI lưu ảnh vào:
+   uploads/entry/
+
+5. FastAPI lưu metadata ảnh vào bảng camera_images.
+
+6. AI Compute Module lấy image_id hoặc image_path để chạy YOLO.
+
+7. AI Module gửi kết quả detection về FastAPI:
+   POST /api/v1/detections
+
+8. FastAPI lưu kết quả vào bảng ai_detections.
+
+9. Nếu is_valid = true:
+   - tạo vehicle_events với event_type = ENTRY
+   - tạo gate_commands với command = OPEN, status = PENDING
+
+10. Arduino/ESP32 polling:
+    GET /api/v1/devices/{device_id}/commands/pending
+
+11. Arduino nhận lệnh OPEN và điều khiển servo.
+
+12. Arduino gửi ACK:
+    PUT /api/v1/gate-commands/{command_id}/ack
+
+13. Backend cập nhật command status = DONE và gate status = OPEN.
+3.2. Luồng xe ra
+1. Ultrasonic sensor ở cổng ra phát hiện vật thể.
+2. Arduino gửi tín hiệu cho ESP32-CAM chụp ảnh.
+3. ESP32-CAM upload ảnh lên FastAPI:
+   POST /api/v1/images/upload
+
+4. Ảnh được lưu vào:
+   uploads/exit/
+
+5. AI Module detect xe hoặc biển số.
+6. AI Module gửi detection result.
+7. Backend tạo vehicle_event với event_type = EXIT.
+8. Backend tạo gate_command OPEN cho cổng ra.
+9. Arduino polling command.
+10. Arduino mở servo.
+11. Arduino ACK lại backend.
+4. Danh sách API endpoint chính thức
+Nhóm	File route	Method	Endpoint	Mục đích
+Image	image_routes.py	POST	/api/v1/images/upload	ESP32-CAM upload ảnh
+Image	image_routes.py	GET	/api/v1/images/{image_id}	Lấy thông tin ảnh
+Detection	detection_routes.py	POST	/api/v1/detections	AI gửi kết quả YOLO
+Detection	detection_routes.py	GET	/api/v1/detections/{detection_id}	Lấy chi tiết detection
+Vehicle Event	vehicle_event_routes.py	GET	/api/v1/vehicle-events	Dashboard lấy lịch sử xe
+Vehicle Event	vehicle_event_routes.py	GET	/api/v1/vehicle-events/{event_id}	Chi tiết một event
+Gate	gate_routes.py	GET	/api/v1/gates/status	Lấy trạng thái tất cả cổng
+Gate	gate_routes.py	GET	/api/v1/gates/{gate_id}/status	Lấy trạng thái một cổng
+Gate	gate_routes.py	POST	/api/v1/gates/{gate_id}/commands	Dashboard gửi lệnh mở/đóng
+Device	gate_routes.py	GET	/api/v1/devices/{device_id}/commands/pending	Arduino/ESP32 lấy lệnh chờ
+Device	gate_routes.py	PUT	/api/v1/gate-commands/{command_id}/ack	Arduino/ESP32 xác nhận đã xử lý
+Sensor	sensor_routes.py	POST	/api/v1/sensors/readings	Lưu ultrasonic reading
+Sensor	sensor_routes.py	GET	/api/v1/sensors/readings	Dashboard xem sensor history
+Dashboard	dashboard_routes.py	GET	/api/v1/dashboard/summary	Tổng quan dashboard
+Dashboard	dashboard_routes.py	GET	/api/v1/dashboard/recent-events	Event mới nhất
+Dashboard	dashboard_routes.py	GET	/api/v1/dashboard/gates	Trạng thái cổng cho dashboard
+5. Thiết kế database models
+5.1. camera_images
+
+File model:
+
+app/models/camera_image.py
+
+Mục đích: lưu ảnh do ESP32-CAM upload.
+
+Các field chính:
+
+image_id
+camera_id
+gate_id
+direction
+image_path
+image_url
+status
+created_at
+
+Status đề xuất:
+
+UPLOADED
+PROCESSING
+DETECTED
+FAILED
+5.2. ai_detections
+
+File model:
+
+app/models/ai_detection.py
+
+Mục đích: lưu kết quả AI YOLO.
+
+Các field chính:
+
+detection_id
+image_id
+camera_id
+gate_id
+direction
+vehicle_type
+license_plate
+vehicle_confidence
+plate_confidence
+is_valid
+processing_time_ms
+raw_result
+created_at
+5.3. vehicle_events
+
+File model:
+
+app/models/vehicle_event.py
+
+Mục đích: lưu lịch sử xe vào/ra.
+
+Các field chính:
+
+vehicle_event_id
+detection_id
+image_id
+event_type
+gate_id
+vehicle_type
+license_plate
+confidence
+image_path
+created_at
+
+Event type:
+
+ENTRY
+EXIT
+5.4. gates
+
+File model:
+
+app/models/gate.py
+
+Mục đích: lưu trạng thái cổng.
+
+Các field chính:
+
+gate_id
+gate_name
+direction
+status
+last_updated
+
+Gate status:
+
+OPEN
+CLOSED
+OPENING
+CLOSING
+ERROR
+UNKNOWN
+5.5. gate_commands
+
+File model:
+
+app/models/gate_command.py
+
+Mục đích: lưu lệnh mở/đóng cổng.
+
+Các field chính:
+
+command_id
+gate_id
+command
+source
+status
+requested_by
+reason
+created_at
+ack_by
+ack_at
+
+Command:
+
+OPEN
+CLOSE
+STOP
+
+Command status:
+
+PENDING
+PROCESSING
+DONE
+FAILED
+CANCELLED
+5.6. sensor_readings
+
+File model:
+
+app/models/sensor_reading.py
+
+Mục đích: lưu dữ liệu ultrasonic sensor.
+
+Các field chính:
+
+sensor_reading_id
+sensor_id
+gate_id
+sensor_type
+distance_cm
+detected
+device_id
+created_at
+6. Thiết kế schemas
+6.1. image_schema.py
+
+Dùng cho upload ảnh và trả thông tin ảnh.
+
+Nên có:
+
+ImageUploadResponse
+ImageDetailResponse
+ImageListResponse
+6.2. detection_schema.py
+
+Dùng cho AI Module gửi kết quả.
+
+Nên có:
+
+DetectionCreateRequest
+DetectionCreateResponse
+DetectionDetailResponse
+6.3. vehicle_event_schema.py
+
+Dùng cho dashboard lấy lịch sử xe.
+
+Nên có:
+
+VehicleEventResponse
+VehicleEventListResponse
+6.4. gate_schema.py
+
+Dùng cho dashboard và Arduino/ESP32.
+
+Nên có:
+
+GateStatusResponse
+GateCommandCreateRequest
+GateCommandResponse
+PendingCommandResponse
+GateCommandAckRequest
+6.5. sensor_schema.py
+
+Dùng cho ultrasonic sensor.
+
+Nên có:
+
+SensorReadingCreateRequest
+SensorReadingResponse
+SensorReadingListResponse
+6.6. dashboard_schema.py
+
+Dùng cho dashboard tổng quan.
+
+Nên có:
+
+DashboardSummaryResponse
+RecentVehicleEventResponse
+GateOverviewResponse
+7. Thiết kế API chi tiết
+7.1. ESP32-CAM upload image
 Endpoint
 POST /api/v1/images/upload
-Content-Type: multipart/form-data
-Request form-data mẫu
-file: car_entry_001.jpg
+Content-Type
+multipart/form-data
+Request form-data
+file: entry_001.jpg
 camera_id: CAM_ENTRY_01
 gate_id: GATE_ENTRY
 direction: ENTRY
-sensor_id: US_ENTRY_01
-distance_cm: 18.5
-Response JSON mẫu
+Response
 {
   "success": true,
   "message": "Image uploaded successfully",
@@ -50,23 +399,30 @@ Response JSON mẫu
     "camera_id": "CAM_ENTRY_01",
     "gate_id": "GATE_ENTRY",
     "direction": "ENTRY",
-    "image_path": "uploads/2026/06/08/car_entry_001.jpg",
-    "status": "PROCESSING"
+    "image_path": "uploads/entry/20260608_153012_CAM_ENTRY_01.jpg",
+    "image_url": "/uploads/entry/20260608_153012_CAM_ENTRY_01.jpg",
+    "status": "UPLOADED"
   }
 }
-Luồng xử lý
-1. ESP32-CAM phát hiện xe hoặc nhận lệnh chụp từ Arduino.
-2. ESP32-CAM gửi ảnh lên FastAPI.
-3. FastAPI validate camera_id, gate_id, direction.
-4. FastAPI lưu ảnh vào thư mục /uploads.
-5. FastAPI lưu metadata ảnh vào bảng CameraImages.
-6. Trả về image_id cho ESP32-CAM hoặc AI Module.
-7. AI Module dùng image_id/image_path để detect.
-3.2. AI Compute Module gửi detection result
+Service xử lý
+
+File:
+
+app/services/image_service.py
+
+Logic:
+
+1. Kiểm tra direction là ENTRY hoặc EXIT.
+2. Kiểm tra file có phải ảnh không.
+3. Tạo tên file không trùng.
+4. Nếu direction = ENTRY thì lưu vào uploads/entry/.
+5. Nếu direction = EXIT thì lưu vào uploads/exit/.
+6. Lưu metadata vào camera_images.
+7. Trả image_id cho ESP32-CAM hoặc AI Module.
+7.2. AI Module gửi detection result
 Endpoint
 POST /api/v1/detections
-Content-Type: application/json
-Request JSON mẫu
+Request JSON
 {
   "image_id": 101,
   "camera_id": "CAM_ENTRY_01",
@@ -94,7 +450,7 @@ Request JSON mẫu
     ]
   }
 }
-Response JSON mẫu
+Response JSON
 {
   "success": true,
   "message": "Detection result saved",
@@ -105,22 +461,35 @@ Response JSON mẫu
     "gate_action": "OPEN"
   }
 }
-Luồng xử lý
-1. AI Module nhận ảnh từ image_path hoặc image_id.
-2. YOLO detect vehicle/license plate.
-3. AI Module gửi kết quả về FastAPI.
-4. FastAPI lưu vào bảng AIDetections.
-5. Nếu is_valid = true:
-   - tạo VehicleEvent với event_type = ENTRY hoặc EXIT.
-   - tạo GateCommand với command = OPEN.
-6. Nếu is_valid = false:
-   - lưu detection nhưng không mở cổng.
-   - gate_action = NONE hoặc DENY.
-7. Dashboard có thể thấy kết quả gần như realtime qua REST polling hoặc WebSocket/SSE.
-3.3. Dashboard lấy danh sách xe vào/ra
+Service xử lý
+
+File:
+
+app/services/detection_service.py
+
+Logic:
+
+1. Kiểm tra image_id có tồn tại trong camera_images không.
+2. Lưu kết quả vào ai_detections.
+3. Cập nhật camera_images.status = DETECTED.
+4. Nếu is_valid = true:
+   - tạo vehicle_events.
+   - tạo gate_commands với command = OPEN, status = PENDING.
+5. Nếu is_valid = false:
+   - không tạo lệnh mở cổng.
+   - trả gate_action = NONE.
+6. Trả detection_id, vehicle_event_id, gate_command_id.
+7.3. Dashboard lấy lịch sử xe vào/ra
 Endpoint
+GET /api/v1/vehicle-events
+Query params
+direction=ENTRY hoặc EXIT
+license_plate=51A12345
+limit=20
+offset=0
+Ví dụ
 GET /api/v1/vehicle-events?direction=ENTRY&limit=20
-Response JSON mẫu
+Response JSON
 {
   "success": true,
   "data": [
@@ -130,31 +499,28 @@ Response JSON mẫu
       "license_plate": "51A12345",
       "vehicle_type": "car",
       "gate_id": "GATE_ENTRY",
-      "image_path": "uploads/2026/06/08/car_entry_001.jpg",
       "confidence": 0.94,
+      "image_path": "uploads/entry/20260608_153012_CAM_ENTRY_01.jpg",
       "created_at": "2026-06-08T15:30:12"
-    },
-    {
-      "vehicle_event_id": 300,
-      "event_type": "EXIT",
-      "license_plate": "59B88888",
-      "vehicle_type": "motorbike",
-      "gate_id": "GATE_EXIT",
-      "image_path": "uploads/2026/06/08/car_exit_002.jpg",
-      "confidence": 0.91,
-      "created_at": "2026-06-08T15:25:01"
     }
   ]
 }
-Luồng xử lý
-1. Dashboard gọi API.
-2. Backend query bảng VehicleEvents.
-3. Có thể filter theo ENTRY, EXIT, license_plate, date range.
-4. Backend trả danh sách mới nhất cho dashboard.
-3.4. Dashboard lấy trạng thái cổng
+Service xử lý
+
+File:
+
+app/services/vehicle_event_service.py
+
+Logic:
+
+1. Nhận filter từ dashboard.
+2. Query bảng vehicle_events.
+3. Sort theo created_at DESC.
+4. Trả danh sách event.
+7.4. Dashboard lấy trạng thái cổng
 Endpoint
 GET /api/v1/gates/status
-Response JSON mẫu
+Response JSON
 {
   "success": true,
   "data": [
@@ -163,7 +529,6 @@ Response JSON mẫu
       "gate_name": "Entry Gate",
       "direction": "ENTRY",
       "status": "CLOSED",
-      "last_command": "OPEN",
       "last_updated": "2026-06-08T15:30:15"
     },
     {
@@ -171,27 +536,33 @@ Response JSON mẫu
       "gate_name": "Exit Gate",
       "direction": "EXIT",
       "status": "OPEN",
-      "last_command": "OPEN",
       "last_updated": "2026-06-08T15:31:02"
     }
   ]
 }
-Luồng xử lý
-1. Dashboard gọi API.
-2. Backend lấy dữ liệu từ bảng Gates hoặc GateStatus.
-3. Trả trạng thái hiện tại: OPEN, CLOSED, ERROR, UNKNOWN.
-3.5. Dashboard gửi lệnh mở/đóng cổng
+Service xử lý
+
+File:
+
+app/services/gate_service.py
+
+Logic:
+
+1. Query bảng gates.
+2. Trả trạng thái mới nhất của từng cổng.
+7.5. Dashboard gửi lệnh mở/đóng cổng
 Endpoint
+POST /api/v1/gates/{gate_id}/commands
+Ví dụ
 POST /api/v1/gates/GATE_ENTRY/commands
-Content-Type: application/json
-Request JSON mẫu
+Request JSON
 {
   "command": "OPEN",
   "source": "DASHBOARD",
   "requested_by": "admin",
   "reason": "Manual open from dashboard"
 }
-Response JSON mẫu
+Response JSON
 {
   "success": true,
   "message": "Gate command created",
@@ -203,15 +574,24 @@ Response JSON mẫu
     "created_at": "2026-06-08T15:32:10"
   }
 }
-Luồng xử lý
-1. Admin bấm Open/Close trên Dashboard.
-2. Dashboard gọi API tạo command.
-3. Backend lưu command vào bảng GateCommands với status = PENDING.
-4. Arduino/ESP32 sẽ gọi API polling để lấy command mới nhất.
-3.6. Arduino/ESP32 lấy lệnh điều khiển cổng
+Service xử lý
+
+File:
+
+app/services/gate_service.py
+
+Logic:
+
+1. Kiểm tra gate_id có tồn tại không.
+2. Kiểm tra command là OPEN, CLOSE hoặc STOP.
+3. Tạo gate_commands với status = PENDING.
+4. Arduino/ESP32 sẽ lấy command này bằng polling API.
+7.6. Arduino/ESP32 lấy lệnh đang chờ
 Endpoint
+GET /api/v1/devices/{device_id}/commands/pending
+Ví dụ
 GET /api/v1/devices/ARD_ENTRY_01/commands/pending?gate_id=GATE_ENTRY
-Response JSON mẫu khi có lệnh
+Response khi có lệnh
 {
   "success": true,
   "has_command": true,
@@ -223,31 +603,39 @@ Response JSON mẫu khi có lệnh
     "created_at": "2026-06-08T15:32:10"
   }
 }
-Response JSON mẫu khi không có lệnh
+Response khi không có lệnh
 {
   "success": true,
   "has_command": false,
   "data": null
 }
-Luồng xử lý
-1. Arduino/ESP32 gọi API mỗi 500ms - 2000ms.
-2. Backend tìm command PENDING mới nhất theo gate_id.
-3. Nếu có command:
+Service xử lý
+
+File:
+
+app/services/gate_service.py
+
+Logic:
+
+1. Arduino/ESP32 gọi API liên tục mỗi 1-2 giây.
+2. Backend tìm command có status = PENDING theo gate_id.
+3. Nếu có:
    - trả command cho Arduino/ESP32.
-4. Arduino nhận OPEN/CLOSE.
-5. Arduino điều khiển servo.
-6. Arduino gọi API ACK để xác nhận đã xử lý.
-3.7. Arduino/ESP32 xác nhận đã xử lý lệnh
+   - có thể cập nhật status = PROCESSING.
+4. Nếu không có:
+   - trả has_command = false.
+7.7. Arduino/ESP32 xác nhận xử lý command
 Endpoint
+PUT /api/v1/gate-commands/{command_id}/ack
+Ví dụ
 PUT /api/v1/gate-commands/701/ack
-Content-Type: application/json
-Request JSON mẫu
+Request JSON
 {
   "device_id": "ARD_ENTRY_01",
   "status": "DONE",
   "message": "Servo opened successfully"
 }
-Response JSON mẫu
+Response JSON
 {
   "success": true,
   "message": "Command acknowledged",
@@ -258,17 +646,25 @@ Response JSON mẫu
     "ack_at": "2026-06-08T15:32:12"
   }
 }
-Luồng xử lý
-1. Arduino/ESP32 thực hiện command.
-2. Arduino/ESP32 gửi ACK về backend.
-3. Backend cập nhật GateCommands.status = DONE hoặc FAILED.
-4. Backend cập nhật Gates.status = OPEN/CLOSED tương ứng.
-5. Backend lưu log vào GateCommandLogs.
-3.8. Lưu sensor reading
+Service xử lý
+
+File:
+
+app/services/gate_service.py
+
+Logic:
+
+1. Tìm command theo command_id.
+2. Cập nhật gate_commands.status = DONE hoặc FAILED.
+3. Cập nhật ack_by và ack_at.
+4. Nếu command = OPEN và status = DONE:
+   - cập nhật gates.status = OPEN.
+5. Nếu command = CLOSE và status = DONE:
+   - cập nhật gates.status = CLOSED.
+7.8. Arduino gửi sensor reading
 Endpoint
 POST /api/v1/sensors/readings
-Content-Type: application/json
-Request JSON mẫu
+Request JSON
 {
   "sensor_id": "US_ENTRY_01",
   "gate_id": "GATE_ENTRY",
@@ -277,7 +673,7 @@ Request JSON mẫu
   "detected": true,
   "device_id": "ARD_ENTRY_01"
 }
-Response JSON mẫu
+Response JSON
 {
   "success": true,
   "message": "Sensor reading saved",
@@ -288,473 +684,343 @@ Response JSON mẫu
     "created_at": "2026-06-08T15:33:00"
   }
 }
-Luồng xử lý
-1. Arduino đọc ultrasonic.
-2. Nếu khoảng cách nhỏ hơn threshold, detected = true.
-3. Arduino gửi reading lên backend.
-4. Backend lưu vào SensorReadings.
-5. Nếu detected = true, hệ thống có thể trigger ESP32-CAM chụp ảnh.
-3.9. Lưu gate command log
+Service xử lý
+
+File:
+
+app/services/sensor_service.py
+
+Logic:
+
+1. Nhận sensor reading từ Arduino.
+2. Lưu vào sensor_readings.
+3. Nếu detected = true:
+   - dashboard có thể hiển thị có xe đang đứng trước cổng.
+4. Backend không nhất thiết phải tự chụp ảnh.
+   Việc chụp ảnh nên để Arduino gửi lệnh cho ESP32-CAM.
+7.9. Dashboard summary
 Endpoint
-POST /api/v1/gate-command-logs
-Content-Type: application/json
-Request JSON mẫu
-{
-  "command_id": 701,
-  "gate_id": "GATE_ENTRY",
-  "device_id": "ARD_ENTRY_01",
-  "action": "OPEN",
-  "status": "SUCCESS",
-  "message": "Gate opened in 1.2 seconds"
-}
-Response JSON mẫu
+GET /api/v1/dashboard/summary
+Response JSON
 {
   "success": true,
-  "message": "Gate command log saved",
   "data": {
-    "log_id": 12001,
-    "command_id": 701
+    "total_entry_today": 25,
+    "total_exit_today": 18,
+    "current_vehicle_count": 7,
+    "entry_gate_status": "CLOSED",
+    "exit_gate_status": "OPEN",
+    "latest_event": {
+      "license_plate": "51A12345",
+      "event_type": "ENTRY",
+      "created_at": "2026-06-08T15:30:12"
+    }
   }
 }
-4. Cấu trúc project FastAPI đề xuất
-smart-parking-backend/
+Service xử lý
+
+File:
+
+app/services/dashboard_service.py
+
+Logic:
+
+1. Đếm tổng ENTRY trong ngày.
+2. Đếm tổng EXIT trong ngày.
+3. current_vehicle_count = total_entry_today - total_exit_today.
+4. Lấy trạng thái cổng vào.
+5. Lấy trạng thái cổng ra.
+6. Lấy event mới nhất.
+8. Uploads folder design
+
+Cách lưu ảnh:
+
+uploads/
+├── entry/
+│   └── 20260608_153012_CAM_ENTRY_01.jpg
 │
-├── app/
-│   ├── main.py
-│   │
-│   ├── core/
-│   │   ├── config.py
-│   │   └── security.py
-│   │
-│   ├── database.py
-│   │
-│   ├── models/
-│   │   ├── camera_image.py
-│   │   ├── ai_detection.py
-│   │   ├── vehicle_event.py
-│   │   ├── gate.py
-│   │   ├── gate_command.py
-│   │   └── sensor_reading.py
-│   │
-│   ├── schemas/
-│   │   ├── detection_schema.py
-│   │   ├── gate_schema.py
-│   │   ├── sensor_schema.py
-│   │   └── image_schema.py
-│   │
-│   ├── api/
-│   │   └── v1/
-│   │       ├── image_routes.py
-│   │       ├── detection_routes.py
-│   │       ├── vehicle_event_routes.py
-│   │       ├── gate_routes.py
-│   │       └── sensor_routes.py
-│   │
-│   ├── services/
-│   │   ├── image_service.py
-│   │   ├── detection_service.py
-│   │   ├── gate_service.py
-│   │   └── sensor_service.py
-│   │
-│   └── utils/
-│       └── file_helper.py
+├── exit/
+│   └── 20260608_154501_CAM_EXIT_01.jpg
 │
-├── uploads/
-│
-├── .env
-├── requirements.txt
-└── README.md
+└── detection/
+    └── 20260608_153012_detected.jpg
 
-Giải thích nhanh:
+Ý nghĩa:
 
-models/   : mapping bảng SQL Server bằng SQLAlchemy ORM.
-schemas/  : Pydantic request/response DTO.
-api/v1/   : định nghĩa endpoint.
-services/ : xử lý business logic.
-uploads/  : lưu ảnh ESP32-CAM.
-database.py : tạo SQLAlchemy engine/session.
-5. Code mẫu kết nối SQL Server
+uploads/entry/
+- Ảnh gốc từ camera cổng vào.
 
-SQLAlchemy có dialect riêng cho Microsoft SQL Server và hỗ trợ kết nối qua mssql+pyodbc. Với ODBC Driver 18, khi dùng môi trường local/dev thường cần cấu hình Encrypt=yes và có thể dùng TrustServerCertificate=yes để bỏ qua kiểm tra certificate trong môi trường không có certificate hợp lệ.
+uploads/exit/
+- Ảnh gốc từ camera cổng ra.
 
-requirements.txt
-fastapi
-uvicorn[standard]
-sqlalchemy
-pyodbc
-pydantic
-pydantic-settings
-python-multipart
-.env
-DB_SERVER=localhost
-DB_PORT=1433
-DB_NAME=SmartParkingDB
-DB_USER=sa
-DB_PASSWORD=YourStrongPassword123
-DB_DRIVER=ODBC Driver 18 for SQL Server
-app/core/config.py
-from pydantic_settings import BaseSettings
-from urllib.parse import quote_plus
+uploads/detection/
+- Ảnh đã được AI vẽ bounding box.
+- Phần này optional, chưa cần làm ngay trong demo đầu.
 
+Database chỉ lưu đường dẫn:
 
-class Settings(BaseSettings):
-    DB_SERVER: str
-    DB_PORT: int = 1433
-    DB_NAME: str
-    DB_USER: str
-    DB_PASSWORD: str
-    DB_DRIVER: str = "ODBC Driver 18 for SQL Server"
+uploads/entry/20260608_153012_CAM_ENTRY_01.jpg
 
-    class Config:
-        env_file = ".env"
+Không lưu trực tiếp ảnh dạng binary vào SQL Server.
 
-    @property
-    def database_url(self) -> str:
-        odbc_connection = (
-            f"DRIVER={{{self.DB_DRIVER}}};"
-            f"SERVER={self.DB_SERVER},{self.DB_PORT};"
-            f"DATABASE={self.DB_NAME};"
-            f"UID={self.DB_USER};"
-            f"PWD={self.DB_PASSWORD};"
-            f"Encrypt=yes;"
-            f"TrustServerCertificate=yes;"
-        )
+9. Kế hoạch triển khai backend theo thứ tự
+Phase 1: Setup project
 
-        encoded_connection = quote_plus(odbc_connection)
-        return f"mssql+pyodbc:///?odbc_connect={encoded_connection}"
+Làm các file cơ bản:
 
-
-settings = Settings()
-app/database.py
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from app.core.config import settings
-
-
-engine = create_engine(
-    settings.database_url,
-    echo=True,
-    pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10
-)
-
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-6. Model SQLAlchemy tối thiểu cho detection
-app/models/ai_detection.py
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, Text
-from sqlalchemy.sql import func
-from app.database import Base
-
-
-class AIDetection(Base):
-    __tablename__ = "ai_detections"
-
-    detection_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-
-    image_id = Column(Integer, nullable=False)
-    camera_id = Column(String(50), nullable=False)
-    gate_id = Column(String(50), nullable=False)
-    direction = Column(String(20), nullable=False)
-
-    vehicle_type = Column(String(50), nullable=True)
-    license_plate = Column(String(30), nullable=True)
-
-    vehicle_confidence = Column(Float, nullable=True)
-    plate_confidence = Column(Float, nullable=True)
-
-    is_valid = Column(Boolean, nullable=False, default=False)
-    processing_time_ms = Column(Integer, nullable=True)
-
-    raw_result = Column(Text, nullable=True)
-
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
-app/models/vehicle_event.py
-from sqlalchemy import Column, Integer, String, Float, DateTime
-from sqlalchemy.sql import func
-from app.database import Base
-
-
-class VehicleEvent(Base):
-    __tablename__ = "vehicle_events"
-
-    vehicle_event_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-
-    detection_id = Column(Integer, nullable=False)
-    image_id = Column(Integer, nullable=False)
-
-    event_type = Column(String(20), nullable=False)
-    gate_id = Column(String(50), nullable=False)
-
-    vehicle_type = Column(String(50), nullable=True)
-    license_plate = Column(String(30), nullable=True)
-    confidence = Column(Float, nullable=True)
-
-    image_path = Column(String(255), nullable=True)
-
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
-app/models/gate_command.py
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.sql import func
-from app.database import Base
-
-
-class GateCommand(Base):
-    __tablename__ = "gate_commands"
-
-    command_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-
-    gate_id = Column(String(50), nullable=False)
-    command = Column(String(20), nullable=False)
-
-    source = Column(String(50), nullable=False)
-    requested_by = Column(String(100), nullable=True)
-    reason = Column(String(255), nullable=True)
-
-    status = Column(String(20), nullable=False, default="PENDING")
-
-    created_at = Column(DateTime, server_default=func.now(), nullable=False)
-    ack_by = Column(String(50), nullable=True)
-    ack_at = Column(DateTime, nullable=True)
-7. Schema request/response cho detection
-app/schemas/detection_schema.py
-from typing import Optional, Dict, Any
-from pydantic import BaseModel, Field
-
-
-class DetectionCreateRequest(BaseModel):
-    image_id: int
-    camera_id: str
-    gate_id: str
-    direction: str = Field(..., examples=["ENTRY", "EXIT"])
-
-    vehicle_type: Optional[str] = None
-    license_plate: Optional[str] = None
-
-    vehicle_confidence: Optional[float] = None
-    plate_confidence: Optional[float] = None
-
-    is_valid: bool
-    processing_time_ms: Optional[int] = None
-
-    raw_result: Optional[Dict[str, Any]] = None
-
-
-class DetectionCreateResponseData(BaseModel):
-    detection_id: int
-    vehicle_event_id: Optional[int] = None
-    gate_command_id: Optional[int] = None
-    gate_action: str
-
-
-class DetectionCreateResponse(BaseModel):
-    success: bool
-    message: str
-    data: DetectionCreateResponseData
-8. Code mẫu endpoint insert detection vào database
-app/api/v1/detection_routes.py
-import json
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-
-from app.database import get_db
-from app.models.ai_detection import AIDetection
-from app.models.vehicle_event import VehicleEvent
-from app.models.gate_command import GateCommand
-from app.schemas.detection_schema import (
-    DetectionCreateRequest,
-    DetectionCreateResponse,
-    DetectionCreateResponseData
-)
-
-
-router = APIRouter(
-    prefix="/api/v1/detections",
-    tags=["AI Detections"]
-)
-
-
-@router.post("", response_model=DetectionCreateResponse)
-def create_detection(
-    request: DetectionCreateRequest,
-    db: Session = Depends(get_db)
-):
-    try:
-        raw_result_json = None
-
-        if request.raw_result is not None:
-            raw_result_json = json.dumps(request.raw_result, ensure_ascii=False)
-
-        detection = AIDetection(
-            image_id=request.image_id,
-            camera_id=request.camera_id,
-            gate_id=request.gate_id,
-            direction=request.direction,
-            vehicle_type=request.vehicle_type,
-            license_plate=request.license_plate,
-            vehicle_confidence=request.vehicle_confidence,
-            plate_confidence=request.plate_confidence,
-            is_valid=request.is_valid,
-            processing_time_ms=request.processing_time_ms,
-            raw_result=raw_result_json
-        )
-
-        db.add(detection)
-        db.flush()
-
-        vehicle_event_id = None
-        gate_command_id = None
-        gate_action = "NONE"
-
-        if request.is_valid:
-            vehicle_event = VehicleEvent(
-                detection_id=detection.detection_id,
-                image_id=request.image_id,
-                event_type=request.direction,
-                gate_id=request.gate_id,
-                vehicle_type=request.vehicle_type,
-                license_plate=request.license_plate,
-                confidence=request.vehicle_confidence,
-                image_path=None
-            )
-
-            db.add(vehicle_event)
-            db.flush()
-
-            vehicle_event_id = vehicle_event.vehicle_event_id
-
-            gate_command = GateCommand(
-                gate_id=request.gate_id,
-                command="OPEN",
-                source="AI_MODULE",
-                requested_by="YOLO",
-                reason=f"Valid {request.direction} detection"
-            )
-
-            db.add(gate_command)
-            db.flush()
-
-            gate_command_id = gate_command.command_id
-            gate_action = "OPEN"
-
-        db.commit()
-
-        return DetectionCreateResponse(
-            success=True,
-            message="Detection result saved",
-            data=DetectionCreateResponseData(
-                detection_id=detection.detection_id,
-                vehicle_event_id=vehicle_event_id,
-                gate_command_id=gate_command_id,
-                gate_action=gate_action
-            )
-        )
-
-    except Exception as error:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to save detection result: {str(error)}"
-        )
-9. Main FastAPI file
+app/__init__.py
 app/main.py
-from fastapi import FastAPI
-from app.database import Base, engine
+app/core/config.py
+app/database.py
+requirements.txt
+.env
 
-from app.api.v1.detection_routes import router as detection_router
+Mục tiêu:
 
-from app.models.ai_detection import AIDetection
-from app.models.vehicle_event import VehicleEvent
-from app.models.gate_command import GateCommand
+- Chạy được FastAPI.
+- Vào được http://127.0.0.1:8000/docs.
+- Kết nối được SQL Server.
+Phase 2: Tạo models
 
+Tạo các file:
 
-app = FastAPI(
-    title="Smart Parking System API",
-    description="Backend API for ESP32-CAM, AI YOLO, SQL Server, and Web Dashboard",
-    version="1.0.0"
-)
+camera_image.py
+ai_detection.py
+vehicle_event.py
+gate.py
+gate_command.py
+sensor_reading.py
 
+Mục tiêu:
 
-Base.metadata.create_all(bind=engine)
+- Mapping đúng các bảng database.
+- Có thể tạo bảng bằng SQLAlchemy hoặc dùng SQL script riêng.
 
+Khuyến nghị cho bài IoT102:
 
-app.include_router(detection_router)
+Nên tạo database bằng SQL Server script trước.
+SQLAlchemy chỉ dùng để query/insert/update.
+Phase 3: Tạo schemas
 
+Tạo các file:
 
-@app.get("/")
-def root():
-    return {
-        "success": True,
-        "message": "Smart Parking Backend API is running"
-    }
-10. Cách chạy backend
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+image_schema.py
+detection_schema.py
+vehicle_event_schema.py
+gate_schema.py
+sensor_schema.py
+dashboard_schema.py
 
-Sau đó mở:
+Mục tiêu:
 
-http://127.0.0.1:8000/docs
+- Chuẩn hóa JSON request.
+- Chuẩn hóa JSON response.
+- Dễ test bằng Swagger UI.
+Phase 4: Làm Image API
 
-Swagger UI của FastAPI sẽ hiện toàn bộ endpoint để test.
+Tạo:
 
-11. Gợi ý status chuẩn nên dùng
-Gate status
-OPEN
-CLOSED
-OPENING
-CLOSING
-ERROR
-UNKNOWN
-Gate command status
-PENDING
-PROCESSING
-DONE
-FAILED
-CANCELLED
-Direction
-ENTRY
-EXIT
-Detection valid logic
-is_valid = true nếu:
-- vehicle_confidence >= 0.70
-- có vehicle_type hợp lệ: car, motorbike, truck, bus
-- nếu dùng biển số thì plate_confidence >= 0.70
+image_routes.py
+image_service.py
+file_helper.py
+
+API cần chạy được:
+
+POST /api/v1/images/upload
+GET  /api/v1/images/{image_id}
+
+Mục tiêu:
+
+- ESP32-CAM hoặc Postman upload được ảnh.
+- Ảnh được lưu vào uploads/entry hoặc uploads/exit.
+- Database lưu được image_path.
+Phase 5: Làm Detection API
+
+Tạo:
+
+detection_routes.py
+detection_service.py
+
+API cần chạy được:
+
+POST /api/v1/detections
+GET  /api/v1/detections/{detection_id}
+
+Mục tiêu:
+
+- AI Module gửi kết quả YOLO được.
+- Backend lưu ai_detections.
+- Nếu is_valid = true thì tự tạo:
+  - vehicle_events
+  - gate_commands OPEN
+
+Đây là API quan trọng nhất của backend.
+
+Phase 6: Làm Gate API
+
+Tạo:
+
+gate_routes.py
+gate_service.py
+gate_schema.py
+
+API cần chạy được:
+
+GET  /api/v1/gates/status
+GET  /api/v1/gates/{gate_id}/status
+POST /api/v1/gates/{gate_id}/commands
+GET  /api/v1/devices/{device_id}/commands/pending
+PUT  /api/v1/gate-commands/{command_id}/ack
+
+Mục tiêu:
+
+- Dashboard tạo lệnh OPEN/CLOSE được.
+- Arduino/ESP32 lấy lệnh pending được.
+- Arduino/ESP32 ACK sau khi điều khiển servo.
+- Backend cập nhật trạng thái cổng.
+Phase 7: Làm Sensor API
+
+Tạo:
+
+sensor_routes.py
+sensor_service.py
+sensor_schema.py
+
+API cần chạy được:
+
+POST /api/v1/sensors/readings
+GET  /api/v1/sensors/readings
+
+Mục tiêu:
+
+- Arduino gửi ultrasonic reading được.
+- Dashboard xem sensor log được.
+Phase 8: Làm Dashboard API
+
+Tạo:
+
+dashboard_routes.py
+dashboard_service.py
+dashboard_schema.py
+
+API cần chạy được:
+
+GET /api/v1/dashboard/summary
+GET /api/v1/dashboard/recent-events
+GET /api/v1/dashboard/gates
+
+Mục tiêu:
+
+- Web Dashboard chỉ cần gọi ít API.
+- Có dữ liệu tổng quan:
+  - tổng xe vào hôm nay
+  - tổng xe ra hôm nay
+  - số xe đang trong bãi
+  - trạng thái cổng
+  - event mới nhất
+10. Thứ tự test backend
+
+Nên test theo đúng thứ tự này:
+
+1. GET /
+   Kiểm tra FastAPI chạy chưa.
+
+2. Test kết nối SQL Server.
+   Kiểm tra database.py.
+
+3. POST /api/v1/images/upload
+   Upload ảnh thử bằng Swagger UI hoặc Postman.
+
+4. POST /api/v1/detections
+   Gửi detection giả lập.
+
+5. GET /api/v1/vehicle-events
+   Kiểm tra event có được tạo chưa.
+
+6. GET /api/v1/gates/status
+   Kiểm tra trạng thái cổng.
+
+7. GET /api/v1/devices/ARD_ENTRY_01/commands/pending?gate_id=GATE_ENTRY
+   Kiểm tra Arduino có lấy được lệnh không.
+
+8. PUT /api/v1/gate-commands/{command_id}/ack
+   Giả lập Arduino xác nhận đã mở cổng.
+
+9. POST /api/v1/sensors/readings
+   Gửi sensor reading giả lập.
+
+10. GET /api/v1/dashboard/summary
+    Kiểm tra dashboard tổng hợp.
+11. Phân công logic theo file
+main.py
+
+Chỉ làm:
+
+- Tạo FastAPI app
+- Include router
+- Mount uploads
+- CORS
+
+Không viết business logic trong main.py.
+
+routes.py
+
+Chỉ làm:
+
+- Nhận request
+- Gọi service
+- Trả response
+
+Không xử lý logic dài trong route.
+
+services.py
+
+Làm logic chính:
+
+- Lưu ảnh
+- Lưu detection
+- Tạo vehicle event
+- Tạo gate command
+- Cập nhật gate status
+- Tính dashboard summary
+models.py
+
+Chỉ định nghĩa bảng database.
+
+schemas.py
+
+Chỉ định nghĩa request/response.
+
 12. Kết luận thiết kế
 
-Thiết kế backend nên tách rõ 4 nhóm chính:
+Thiết kế backend cuối cùng nên đi theo hướng:
 
-1. ESP32-CAM API:
-   - upload image
+REST API + SQL Server + file storage local + polling command
 
-2. AI API:
-   - insert detection result
+Chưa cần WebSocket ngay.
 
-3. Dashboard API:
-   - get vehicle events
-   - get gate status
-   - send gate command
+Với demo IoT102, cách này là hợp lý nhất vì:
 
-4. Device API:
-   - Arduino/ESP32 polling command
-   - ACK command
-   - send sensor reading
+- Dễ code.
+- Dễ debug bằng Swagger UI.
+- ESP32/Arduino dễ gọi API.
+- Dashboard dễ gọi REST.
+- SQL Server lưu được toàn bộ lịch sử.
+- Có thể mở rộng realtime sau.
 
-Với demo IoT102, chưa cần WebSocket ngay. Cứ dùng REST API + polling là đủ dễ làm, dễ debug, dễ trình bày với giảng viên. Khi dashboard cần realtime mượt hơn thì nâng cấp thêm WebSocket hoặc Server-Sent Events
+Thứ tự ưu tiên code:
+
+1. database.py + models
+2. image upload API
+3. detection insert API
+4. gate command API
+5. vehicle event API
+6. sensor reading API
+7. dashboard summary API
+
+Nếu làm đúng thứ tự này, backend sẽ có thể demo luồng đầy đủ:
+
+Upload image -> AI gửi detection -> tạo event -> tạo command OPEN -> Arduino lấy command -> ACK -> Dashboard hiển thị lịch sử
+Reference
+
+Dựa trên thiết kế project FastAPI mới đã sửa của bạn và yêu cầu Smart Parking System with AI and Dashboard.
