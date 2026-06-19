@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+<mxfile host="Electron">
   <diagram name="Page-1" id="bkB0dx7bsq1goouGa0cO">
-    <mxGraphModel dx="2090" dy="1861" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1934" dy="1759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -210,48 +210,6 @@
         </mxCell>
         <mxCell id="lNx-wodeUXjTu_8ULB08-124" parent="1" style="shape=stencil(lVZdU9wwDPw1ed2RLcsfzxT+BzMcvQzXO+Y4aPn3KM0EIh9Rp29OvLKl3bXsgW9e9vfPuyHSy+V8etr9Hh8u+4F/DDGOx/3uPF50NPDtwDePp/Pu5/n0enyYv5/vJ+Q0+nV6m1b4M8cFQqlTVKT3+Y9EcP77524OOIzHVYAgWnzKqLSND5Bs8NyQeBtPILL4AHLxpRh8jEhlG88ozeBDQpZtfEVJBl+RvHIFIVh+XDo122lunT+ah29g7tdPTrmCQl3+Xj6JkMsVP07BifsNJgGCE5CQrAJMaI5iSRmR3kLsSdwQrWbq0eJozLxMrw+BY7pYQNbVIhAnIDTULiAvRv8+QIu2PhJN0qE1o3U1V9TmlACxOivN5BiJELtzzO76V/ivzrGVj5UgFITo1mv5CZ87bhFabcHi9qFJMbsBLyd70xI9XjyTfsq54P/tUfoPvJ7LbBt1QHX4F+0jVgByDZoF1K8fHT6Lyi89/04+NfUXjSoojiFaQLadUTNqTkYtL4SsLB0cyVpD6XqvnnrnDAS6us1Erw/Hpa0g2+ZY/OuvaZ+w90eNru+qoNmqdYnk8FoKYncjUG8NHXw9MB7Hw2F+n6zn+weJ/pofM3z7AQ==);lineShape=1;strokeColor=default;" value="" vertex="1">
           <mxGeometry height="2.8971451400145725" width="3.459197417209225" x="141.2806155759822" y="101.65368513611429" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-1" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;strokeColor=#82b366;" value="Cam 1" vertex="1">
-          <mxGeometry height="160" width="160" x="0.32" y="640" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-2" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;strokeColor=#82b366;" value="Cam 2" vertex="1">
-          <mxGeometry height="159.75" width="159.75" x="200" y="640" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=#d6b656;" value="" vertex="1">
-          <mxGeometry height="160" width="359.68" x="0.32" y="840" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=#d6b656;" value="" vertex="1">
-          <mxGeometry height="160" width="160" x="400" y="639.75" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-7" parent="1" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;rounded=0;fontSize=11;fontColor=#FF0000;" value="Thông tin cổng" vertex="1">
-          <mxGeometry height="30" width="120" x="420" y="639.75" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-8" parent="1" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;rounded=0;fontSize=11;fontColor=#FF0000;" value="Trạng thái: đóng/mở" vertex="1">
-          <mxGeometry height="30" width="120" x="420" y="669.75" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-9" parent="1" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;rounded=0;fontSize=11;fontColor=#FF0000;" value="Cảm biến: phát hiện/không" vertex="1">
-          <mxGeometry height="30" width="120" x="420" y="699.75" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-11" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;strokeColor=#82b366;" value="Cam" vertex="1">
-          <mxGeometry height="40" width="40" x="0.950000000000017" y="840" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=#d6b656;" value="Biển số xe, ảnh xe vào, loại xe, thời gian vào" vertex="1">
-          <mxGeometry height="40" width="320" x="40" y="840" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-13" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;strokeColor=#82b366;" value="Cam" vertex="1">
-          <mxGeometry height="40" width="40" x="0.950000000000017" y="880" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=#d6b656;" value="Biển số xe, ảnh xe vào, loại xe, thời gian vào" vertex="1">
-          <mxGeometry height="40" width="320" x="40" y="880" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=#d6b656;" value="" vertex="1">
-          <mxGeometry height="160" width="160" x="400" y="840" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=#d6b656;" value="Mở cổng: Thời gian" vertex="1">
-          <mxGeometry height="40" width="160" x="400" y="840" as="geometry" />
-        </mxCell>
-        <mxCell id="Xkvr1rPiQqh3XMGdwEX0-17" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=none;strokeColor=#d6b656;" value="Đóng cổng: Thời gian&amp;nbsp;" vertex="1">
-          <mxGeometry height="40" width="160" x="400" y="880" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
