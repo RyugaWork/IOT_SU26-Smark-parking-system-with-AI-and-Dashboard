@@ -6,7 +6,7 @@
 // =============================
 // Slave 1 I2C Address
 // =============================
-#define SLAVE_ADDRESS //0x08 || 0x09
+#define SLAVE_ADDRESS 0x09 //0x08 || 0x09
 
 // =============================
 // Input Pins
