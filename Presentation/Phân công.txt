@@ -1,0 +1,18 @@
+Thành viên:
+Đỗ Thanh Triết
+Bùi Đình Long
+Nguyễn Sỹ Minh Mẫn
+Trần Đăng Khoa
+
+Phân công:
+Hardware & Arduino logics: Long & Triết
+Server & Yolo: Mẫn & Triết
+Web desgin: Mẫn & Khoa
+Report writing: Long & Khoa
+
+AI Audit logs:
+Mỗi người log theo phân công 16-18 logs, và 2 hallucation (1 cái về AI tìm sai bài báo).
+Evidence là capture AI chat logs
+
+Thông tin về lựa chọn đề tài: 
+Tìm hiểu bài báo -> tích hợp tất cả tính năng của các project xưa.

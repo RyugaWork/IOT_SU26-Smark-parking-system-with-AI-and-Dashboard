@@ -16,6 +16,6 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>dashboard</welcome-file>
+        <welcome-file>dashboard_simplify.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
