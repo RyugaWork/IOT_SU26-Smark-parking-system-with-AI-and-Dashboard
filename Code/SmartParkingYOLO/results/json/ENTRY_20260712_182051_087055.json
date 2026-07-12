@@ -1,5 +1,5 @@
 {
-  "decision": "CLOSE",
+  "decision": "OPEN",
   "event_status": "OK",
   "detections": [
     {
@@ -59,14 +59,5 @@
   "object_detected": null,
   "model_path": "yolov8n.pt",
   "raw_image_path": "results/raw/ENTRY_20260712_182051_087055.jpg",
-  "annotated_image_path": "results/annotated/ENTRY_20260712_182051_087055.jpg",
-  "decision_before_database_rule": "OPEN",
-  "database": {
-    "database_enabled": true,
-    "detection_id": 16,
-    "final_decision": "CLOSE",
-    "count_before": 2,
-    "count_after": 2,
-    "error_message": "Parking capacity is full. Entry decision changed to CLOSE."
-  }
+  "annotated_image_path": "results/annotated/ENTRY_20260712_182051_087055.jpg"
 }
