@@ -1,48 +1,10 @@
 {
   "decision": "CLOSE",
-  "event_status": "OK",
-  "detections": [
-    {
-      "class_id": 2,
-      "class": "car",
-      "confidence": 0.7901,
-      "confidence_percent": 79.01,
-      "bbox": [
-        15.45,
-        66.18,
-        467.59,
-        334.44
-      ],
-      "allowed": true
-    }
-  ],
-  "best_detection": {
-    "class_id": 2,
-    "class": "car",
-    "confidence": 0.7901,
-    "confidence_percent": 79.01,
-    "bbox": [
-      15.45,
-      66.18,
-      467.59,
-      334.44
-    ],
-    "allowed": true
-  },
-  "best_allowed_detection": {
-    "class_id": 2,
-    "class": "car",
-    "confidence": 0.7901,
-    "confidence_percent": 79.01,
-    "bbox": [
-      15.45,
-      66.18,
-      467.59,
-      334.44
-    ],
-    "allowed": true
-  },
-  "inference_ms": 81.87,
+  "event_status": "NO_DETECTION",
+  "detections": [],
+  "best_detection": null,
+  "best_allowed_detection": null,
+  "inference_ms": 137.02,
   "allowed_classes": [
     "bus",
     "car",
@@ -51,22 +13,22 @@
   ],
   "confidence_threshold": 0.45,
   "img_size": 640,
-  "request_id": "20260712_182051_087055",
-  "timestamp": "2026-07-12T18:20:51",
-  "direction": "ENTRY",
+  "request_id": "20260713_162306_963050",
+  "timestamp": "2026-07-13T16:23:07",
+  "direction": "EXIT",
   "sequence_id": null,
   "distance_cm": null,
   "object_detected": null,
   "model_path": "yolov8n.pt",
-  "raw_image_path": "results/raw/ENTRY_20260712_182051_087055.jpg",
-  "annotated_image_path": "results/annotated/ENTRY_20260712_182051_087055.jpg",
-  "decision_before_database_rule": "OPEN",
+  "raw_image_path": "results/raw/EXIT_20260713_162306_963050.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260713_162306_963050.jpg",
+  "decision_before_database_rule": "CLOSE",
   "database": {
     "database_enabled": true,
-    "detection_id": 16,
+    "detection_id": 33,
     "final_decision": "CLOSE",
     "count_before": 2,
     "count_after": 2,
-    "error_message": "Parking capacity is full. Entry decision changed to CLOSE."
+    "error_message": null
   }
 }
