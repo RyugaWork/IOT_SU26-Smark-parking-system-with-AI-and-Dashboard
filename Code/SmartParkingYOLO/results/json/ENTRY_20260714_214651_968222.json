@@ -1,0 +1,76 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.7491,
+      "confidence_percent": 74.91,
+      "bbox": [
+        0.0,
+        117.16,
+        795.97,
+        600.0
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.6297,
+      "confidence_percent": 62.97,
+      "bbox": [
+        1.89,
+        0.75,
+        378.76,
+        317.41
+      ],
+      "allowed": false
+    }
+  ],
+  "best_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.7491,
+    "confidence_percent": 74.91,
+    "bbox": [
+      0.0,
+      117.16,
+      795.97,
+      600.0
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.7491,
+    "confidence_percent": 74.91,
+    "bbox": [
+      0.0,
+      117.16,
+      795.97,
+      600.0
+    ],
+    "allowed": true
+  },
+  "inference_ms": 439.08,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260714_214651_968222",
+  "timestamp": "2026-07-14T21:46:52",
+  "direction": "ENTRY",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/ENTRY_20260714_214651_968222.jpg",
+  "annotated_image_path": "results/annotated/ENTRY_20260714_214651_968222.jpg"
+}

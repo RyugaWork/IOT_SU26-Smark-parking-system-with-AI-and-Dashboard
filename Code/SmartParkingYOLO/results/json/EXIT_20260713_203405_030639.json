@@ -1,0 +1,25 @@
+{
+  "decision": "CLOSE",
+  "event_status": "NO_DETECTION",
+  "detections": [],
+  "best_detection": null,
+  "best_allowed_detection": null,
+  "inference_ms": 120.2,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260713_203405_030639",
+  "timestamp": "2026-07-13T20:34:05",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolov8n.pt",
+  "raw_image_path": "results/raw/EXIT_20260713_203405_030639.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260713_203405_030639.jpg"
+}

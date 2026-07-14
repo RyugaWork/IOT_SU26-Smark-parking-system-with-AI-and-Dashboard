@@ -28,7 +28,7 @@ set /a TOTAL=0
 set /a SUCCESS=0
 set /a FAILED=0
 
-for %%F in (*.jpg *.jpeg) do (
+for %%F in (*.jpg *.jpeg *.png) do (
     if exist "%%F" (
         set /a TOTAL+=1
         echo.

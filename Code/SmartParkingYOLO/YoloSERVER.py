@@ -60,7 +60,7 @@ def env_int(name: str, default: str) -> int:
         return int(default)
 
 
-MODEL_PATH = os.getenv("MODEL_PATH", "yolov8n.pt")
+MODEL_PATH = os.getenv("MODEL_PATH", "yolo26l.pt")
 CONF_THRESHOLD = env_float("CONF_THRESHOLD", "0.45")
 IMG_SIZE = env_int("IMG_SIZE", "640")
 ALLOWED_CLASSES = {
