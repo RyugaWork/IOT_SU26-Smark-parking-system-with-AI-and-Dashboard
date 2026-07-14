@@ -8,9 +8,6 @@ import utils.ConnectDb;
 
 public class DashboardDAO {
 
-    /**
-     * Lấy dữ liệu tổng quan cho dashboard.
-     */
     public DashboardOverview getOverview() {
         String sql
                 = "SELECT capacity, vehicles_inside, "
@@ -33,34 +30,25 @@ public class DashboardDAO {
         return null;
     }
 
-    private DashboardOverview mapDashboardOverview(
-            ResultSet rs
-    ) throws Exception {
+    private DashboardOverview mapDashboardOverview(ResultSet rs)
+            throws Exception {
 
         DashboardOverview overview = new DashboardOverview();
 
         overview.setCapacity(rs.getInt("capacity"));
-        overview.setVehiclesInside(
-                rs.getInt("vehicles_inside")
-        );
+        overview.setVehiclesInside(rs.getInt("vehicles_inside"));
         overview.setAvailableCapacity(
                 rs.getInt("available_capacity")
         );
-        overview.setEntriesToday(
-                rs.getInt("entries_today")
-        );
-        overview.setExitsToday(
-                rs.getInt("exits_today")
-        );
+        overview.setEntriesToday(rs.getInt("entries_today"));
+        overview.setExitsToday(rs.getInt("exits_today"));
         overview.setEntryGateState(
                 rs.getString("entry_gate_state")
         );
         overview.setExitGateState(
                 rs.getString("exit_gate_state")
         );
-        overview.setUpdatedAt(
-                rs.getTimestamp("updated_at")
-        );
+        overview.setUpdatedAt(rs.getTimestamp("updated_at"));
 
         return overview;
     }
