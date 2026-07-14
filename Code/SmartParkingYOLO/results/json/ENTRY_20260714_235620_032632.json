@@ -1,0 +1,51 @@
+{
+  "decision": "CLOSE",
+  "event_status": "NO_DETECTION",
+  "detections": [
+    {
+      "class_id": 59,
+      "class": "bed",
+      "confidence": 0.7653,
+      "confidence_percent": 76.53,
+      "bbox": [
+        0.63,
+        2.3,
+        798.26,
+        565.98
+      ],
+      "allowed": false
+    }
+  ],
+  "best_detection": {
+    "class_id": 59,
+    "class": "bed",
+    "confidence": 0.7653,
+    "confidence_percent": 76.53,
+    "bbox": [
+      0.63,
+      2.3,
+      798.26,
+      565.98
+    ],
+    "allowed": false
+  },
+  "best_allowed_detection": null,
+  "inference_ms": 413.95,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260714_235620_032632",
+  "timestamp": "2026-07-14T23:56:20",
+  "direction": "ENTRY",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/ENTRY_20260714_235620_032632.jpg",
+  "annotated_image_path": "results/annotated/ENTRY_20260714_235620_032632.jpg"
+}

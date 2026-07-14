@@ -1,0 +1,63 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 7,
+      "class": "truck",
+      "confidence": 0.4825,
+      "confidence_percent": 48.25,
+      "bbox": [
+        2.03,
+        180.59,
+        777.15,
+        550.77
+      ],
+      "allowed": true
+    }
+  ],
+  "best_detection": {
+    "class_id": 7,
+    "class": "truck",
+    "confidence": 0.4825,
+    "confidence_percent": 48.25,
+    "bbox": [
+      2.03,
+      180.59,
+      777.15,
+      550.77
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 7,
+    "class": "truck",
+    "confidence": 0.4825,
+    "confidence_percent": 48.25,
+    "bbox": [
+      2.03,
+      180.59,
+      777.15,
+      550.77
+    ],
+    "allowed": true
+  },
+  "inference_ms": 415.92,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260715_000515_203819",
+  "timestamp": "2026-07-15T00:05:15",
+  "direction": "ENTRY",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/ENTRY_20260715_000515_203819.jpg",
+  "annotated_image_path": "results/annotated/ENTRY_20260715_000515_203819.jpg"
+}
