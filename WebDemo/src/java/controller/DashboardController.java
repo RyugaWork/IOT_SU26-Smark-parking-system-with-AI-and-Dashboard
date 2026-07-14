@@ -1,11 +1,10 @@
 package controller;
 
-import dao.ParkingLogDAO;
-import dao.SlotDAO;
+import dao.DashboardDAO;
+import dao.DetectionEventDAO;
+import dao.GateDAO;
+import dao.ParkingOccupancyDAO;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,110 +12,176 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.ParkingLog;
-import model.Slot;
+import model.DashboardOverview;
+import model.DetectionEvent;
+import model.Gate;
+import model.ParkingOccupancy;
 
 @WebServlet(name = "DashboardController", urlPatterns = {"/dashboard"})
 public class DashboardController extends HttpServlet {
 
-    private final SlotDAO slotDAO = new SlotDAO();
-    private final ParkingLogDAO parkingLogDAO = new ParkingLogDAO();
+    private final DashboardDAO dashboardDAO = new DashboardDAO();
+    private final DetectionEventDAO detectionEventDAO
+            = new DetectionEventDAO();
+    private final GateDAO gateDAO = new GateDAO();
+    private final ParkingOccupancyDAO parkingOccupancyDAO
+            = new ParkingOccupancyDAO();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws ServletException, IOException {
+
         processDashboard(request, response);
     }
 
-    private void processDashboard(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private void processDashboard(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws ServletException, IOException {
 
-        List<Slot> slots = slotDAO.getAll();
-        List<ParkingLog> parkingLogs = parkingLogDAO.getAll();
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
-        List<ParkingLog> parkedLogs = new ArrayList<>();
-        List<ParkingLog> completedLogs = new ArrayList<>();
+        try {
+            DashboardOverview overview
+                    = dashboardDAO.getOverview();
 
-        ParkingLog latestEntry = null;
-        ParkingLog latestExit = null;
+            DetectionEvent latestEntry
+                    = detectionEventDAO.getLatestByDirection("ENTRY");
 
-        int entriesToday = 0;
-        int exitsToday = 0;
+            DetectionEvent latestExit
+                    = detectionEventDAO.getLatestByDirection("EXIT");
 
-        for (ParkingLog log : parkingLogs) {
-            if ("PARKED".equalsIgnoreCase(log.getStatus())) {
-                parkedLogs.add(log);
+            List<DetectionEvent> recentEvents
+                    = detectionEventDAO.getRecent(50);
+
+            List<Gate> gates = gateDAO.getAll();
+
+            Gate entryGate = gateDAO.getById("ENTRY_GATE");
+            Gate exitGate = gateDAO.getById("EXIT_GATE");
+
+            ParkingOccupancy occupancy
+                    = parkingOccupancyDAO.getCurrent();
+
+            request.setAttribute("overview", overview);
+            request.setAttribute("latestEntry", latestEntry);
+            request.setAttribute("latestExit", latestExit);
+            request.setAttribute("recentEvents", recentEvents);
+            request.setAttribute("gates", gates);
+            request.setAttribute("entryGate", entryGate);
+            request.setAttribute("exitGate", exitGate);
+            request.setAttribute("occupancy", occupancy);
+
+            if (overview != null) {
+                request.setAttribute(
+                        "capacity",
+                        overview.getCapacity()
+                );
+
+                request.setAttribute(
+                        "vehiclesInside",
+                        overview.getVehiclesInside()
+                );
+
+                request.setAttribute(
+                        "availableCapacity",
+                        overview.getAvailableCapacity()
+                );
+
+                request.setAttribute(
+                        "entriesToday",
+                        overview.getEntriesToday()
+                );
+
+                request.setAttribute(
+                        "exitsToday",
+                        overview.getExitsToday()
+                );
+
+                request.setAttribute(
+                        "entryGateStatus",
+                        overview.getEntryGateState()
+                );
+
+                request.setAttribute(
+                        "exitGateStatus",
+                        overview.getExitGateState()
+                );
+
+                request.setAttribute(
+                        "gateStatus",
+                        buildGateStatus(
+                                overview.getEntryGateState(),
+                                overview.getExitGateState()
+                        )
+                );
+            } else {
+                setDefaultDashboardValues(request);
             }
 
-            if ("COMPLETED".equalsIgnoreCase(log.getStatus())) {
-                completedLogs.add(log);
-            }
+            /*
+             * Database hiện chưa có bảng heartbeat cho camera/sensor.
+             * Vì vậy không được hiển thị ONLINE cố định.
+             */
+            request.setAttribute("entryCameraStatus", "UNKNOWN");
+            request.setAttribute("exitCameraStatus", "UNKNOWN");
+            request.setAttribute("entrySensorStatus", "UNKNOWN");
+            request.setAttribute("exitSensorStatus", "UNKNOWN");
 
-            if (latestEntry == null) {
-                latestEntry = log;
-            }
+            RequestDispatcher dispatcher
+                    = request.getRequestDispatcher("/dashboard.jsp");
 
-            if (latestExit == null && log.getExitTime() != null) {
-                latestExit = log;
-            }
+            dispatcher.forward(request, response);
 
-            if (isToday(log.getEntryTime())) {
-                entriesToday++;
-            }
+        } catch (Exception e) {
+            log("DashboardController error", e);
 
-            if (log.getExitTime() != null && isToday(log.getExitTime())) {
-                exitsToday++;
-            }
+            request.setAttribute(
+                    "errorMessage",
+                    "Cannot load dashboard data."
+            );
+
+            setDefaultDashboardValues(request);
+
+            RequestDispatcher dispatcher
+                    = request.getRequestDispatcher("/dashboard.jsp");
+
+            dispatcher.forward(request, response);
         }
-
-        int totalSlots = slots.size();
-        int occupiedSlots = 0;
-        int availableSlots = 0;
-
-        for (Slot slot : slots) {
-            if ("OCCUPIED".equalsIgnoreCase(slot.getStatus())) {
-                occupiedSlots++;
-            } else if ("AVAILABLE".equalsIgnoreCase(slot.getStatus())) {
-                availableSlots++;
-            }
-        }
-
-        // TODO: Chờ tích hợp AI thật.
-        // Sau này latestEntry/latestExit có thể lấy từ camera + AI detection thay vì database mock.
-        request.setAttribute("latestEntry", latestEntry);
-        request.setAttribute("latestExit", latestExit);
-
-        request.setAttribute("slots", slots);
-        request.setAttribute("parkingLogs", parkingLogs);
-        request.setAttribute("parkedLogs", parkedLogs);
-        request.setAttribute("completedLogs", completedLogs);
-
-        request.setAttribute("totalSlots", totalSlots);
-        request.setAttribute("occupiedSlots", occupiedSlots);
-        request.setAttribute("availableSlots", availableSlots);
-
-        request.setAttribute("vehiclesInside", parkedLogs.size());
-        request.setAttribute("entriesToday", entriesToday);
-        request.setAttribute("exitsToday", exitsToday);
-
-        // TODO: Gate status đang mock cứng.
-        // Sau này lấy từ Arduino/ESP32 hoặc bảng gate_commands.
-        request.setAttribute("gateStatus", "OPEN");
-
-        RequestDispatcher rd = request.getRequestDispatcher("/dashboard.jsp");
-        rd.forward(request, response);
     }
 
-    private boolean isToday(Timestamp timestamp) {
-        if (timestamp == null) {
-            return false;
+    private void setDefaultDashboardValues(
+            HttpServletRequest request
+    ) {
+        request.setAttribute("capacity", 0);
+        request.setAttribute("vehiclesInside", 0);
+        request.setAttribute("availableCapacity", 0);
+        request.setAttribute("entriesToday", 0);
+        request.setAttribute("exitsToday", 0);
+        request.setAttribute("entryGateStatus", "UNKNOWN");
+        request.setAttribute("exitGateStatus", "UNKNOWN");
+        request.setAttribute("gateStatus", "UNKNOWN");
+    }
+
+    private String buildGateStatus(
+            String entryGateState,
+            String exitGateState
+    ) {
+        String entry = entryGateState == null
+                ? "UNKNOWN"
+                : entryGateState;
+
+        String exit = exitGateState == null
+                ? "UNKNOWN"
+                : exitGateState;
+
+        if (entry.equalsIgnoreCase(exit)) {
+            return entry;
         }
 
-        Calendar today = Calendar.getInstance();
-        Calendar date = Calendar.getInstance();
-        date.setTime(timestamp);
-
-        return today.get(Calendar.YEAR) == date.get(Calendar.YEAR)
-                && today.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR);
+        return "ENTRY: " + entry + " | EXIT: " + exit;
     }
 }
