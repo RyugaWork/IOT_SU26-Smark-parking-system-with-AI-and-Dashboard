@@ -1,0 +1,51 @@
+{
+  "decision": "CLOSE",
+  "event_status": "NO_DETECTION",
+  "detections": [
+    {
+      "class_id": 60,
+      "class": "dining table",
+      "confidence": 0.6339,
+      "confidence_percent": 63.39,
+      "bbox": [
+        0.0,
+        268.46,
+        797.7,
+        600.0
+      ],
+      "allowed": false
+    }
+  ],
+  "best_detection": {
+    "class_id": 60,
+    "class": "dining table",
+    "confidence": 0.6339,
+    "confidence_percent": 63.39,
+    "bbox": [
+      0.0,
+      268.46,
+      797.7,
+      600.0
+    ],
+    "allowed": false
+  },
+  "best_allowed_detection": null,
+  "inference_ms": 424.87,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260714_213802_002196",
+  "timestamp": "2026-07-14T21:38:02",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/EXIT_20260714_213802_002196.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260714_213802_002196.jpg"
+}

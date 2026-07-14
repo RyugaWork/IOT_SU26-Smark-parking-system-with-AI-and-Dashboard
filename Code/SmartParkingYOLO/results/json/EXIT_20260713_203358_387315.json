@@ -1,0 +1,219 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.9345,
+      "confidence_percent": 93.45,
+      "bbox": [
+        18.58,
+        1.92,
+        153.08,
+        299.98
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.7915,
+      "confidence_percent": 79.15,
+      "bbox": [
+        108.24,
+        40.21,
+        329.44,
+        246.36
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.7602,
+      "confidence_percent": 76.02,
+      "bbox": [
+        260.8,
+        36.86,
+        281.73,
+        56.69
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.7455,
+      "confidence_percent": 74.55,
+      "bbox": [
+        312.41,
+        24.69,
+        388.96,
+        84.77
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.6951,
+      "confidence_percent": 69.51,
+      "bbox": [
+        221.74,
+        39.37,
+        272.5,
+        62.95
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 26,
+      "class": "handbag",
+      "confidence": 0.6584,
+      "confidence_percent": 65.84,
+      "bbox": [
+        122.27,
+        131.33,
+        147.15,
+        168.33
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.6349,
+      "confidence_percent": 63.49,
+      "bbox": [
+        278.81,
+        37.06,
+        303.99,
+        52.62
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.6313,
+      "confidence_percent": 63.13,
+      "bbox": [
+        157.78,
+        25.37,
+        173.16,
+        41.24
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.6084,
+      "confidence_percent": 60.84,
+      "bbox": [
+        278.68,
+        37.58,
+        296.14,
+        53.27
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.5179,
+      "confidence_percent": 51.79,
+      "bbox": [
+        303.53,
+        32.45,
+        320.18,
+        46.88
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 7,
+      "class": "truck",
+      "confidence": 0.5151,
+      "confidence_percent": 51.51,
+      "bbox": [
+        312.83,
+        25.03,
+        389.63,
+        84.2
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.5135,
+      "confidence_percent": 51.35,
+      "bbox": [
+        183.67,
+        24.28,
+        199.07,
+        42.0
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.4745,
+      "confidence_percent": 47.45,
+      "bbox": [
+        197.95,
+        28.28,
+        210.47,
+        42.48
+      ],
+      "allowed": false
+    }
+  ],
+  "best_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.7915,
+    "confidence_percent": 79.15,
+    "bbox": [
+      108.24,
+      40.21,
+      329.44,
+      246.36
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.7915,
+    "confidence_percent": 79.15,
+    "bbox": [
+      108.24,
+      40.21,
+      329.44,
+      246.36
+    ],
+    "allowed": true
+  },
+  "inference_ms": 86.66,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260713_203358_387315",
+  "timestamp": "2026-07-13T20:33:58",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolov8n.pt",
+  "raw_image_path": "results/raw/EXIT_20260713_203358_387315.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260713_203358_387315.jpg"
+}

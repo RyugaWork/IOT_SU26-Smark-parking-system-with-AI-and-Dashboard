@@ -1,0 +1,63 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 7,
+      "class": "truck",
+      "confidence": 0.5485,
+      "confidence_percent": 54.85,
+      "bbox": [
+        8.95,
+        33.72,
+        288.29,
+        202.45
+      ],
+      "allowed": true
+    }
+  ],
+  "best_detection": {
+    "class_id": 7,
+    "class": "truck",
+    "confidence": 0.5485,
+    "confidence_percent": 54.85,
+    "bbox": [
+      8.95,
+      33.72,
+      288.29,
+      202.45
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 7,
+    "class": "truck",
+    "confidence": 0.5485,
+    "confidence_percent": 54.85,
+    "bbox": [
+      8.95,
+      33.72,
+      288.29,
+      202.45
+    ],
+    "allowed": true
+  },
+  "inference_ms": 64.29,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260713_203352_696557",
+  "timestamp": "2026-07-13T20:33:52",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolov8n.pt",
+  "raw_image_path": "results/raw/EXIT_20260713_203352_696557.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260713_203352_696557.jpg"
+}
