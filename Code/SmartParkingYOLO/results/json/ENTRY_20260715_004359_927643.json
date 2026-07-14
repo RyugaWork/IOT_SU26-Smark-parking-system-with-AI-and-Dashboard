@@ -59,14 +59,5 @@
   "object_detected": null,
   "model_path": "yolo26l.pt",
   "raw_image_path": "results/raw/ENTRY_20260715_004359_927643.jpg",
-  "annotated_image_path": "results/annotated/ENTRY_20260715_004359_927643.jpg",
-  "decision_before_database_rule": "OPEN",
-  "database": {
-    "database_enabled": true,
-    "detection_id": 95,
-    "final_decision": "OPEN",
-    "count_before": 1,
-    "count_after": 2,
-    "error_message": null
-  }
+  "annotated_image_path": "results/annotated/ENTRY_20260715_004359_927643.jpg"
 }
