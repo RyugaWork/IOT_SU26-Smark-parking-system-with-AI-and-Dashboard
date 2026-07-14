@@ -1,3 +1,4 @@
+
 USE SmartParkingIOT102;
 
 Select * FROM detection_events
