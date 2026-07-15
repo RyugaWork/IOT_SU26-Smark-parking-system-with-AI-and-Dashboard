@@ -1,0 +1,89 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.9399,
+      "confidence_percent": 93.99,
+      "bbox": [
+        43.48,
+        38.54,
+        368.2,
+        293.02
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.9014,
+      "confidence_percent": 90.14,
+      "bbox": [
+        318.29,
+        62.62,
+        399.8,
+        176.41
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.4664,
+      "confidence_percent": 46.64,
+      "bbox": [
+        321.72,
+        16.57,
+        337.08,
+        51.78
+      ],
+      "allowed": false
+    }
+  ],
+  "best_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9399,
+    "confidence_percent": 93.99,
+    "bbox": [
+      43.48,
+      38.54,
+      368.2,
+      293.02
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9399,
+    "confidence_percent": 93.99,
+    "bbox": [
+      43.48,
+      38.54,
+      368.2,
+      293.02
+    ],
+    "allowed": true
+  },
+  "inference_ms": 436.27,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260715_184708_628077",
+  "timestamp": "2026-07-15T18:47:09",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/EXIT_20260715_184708_628077.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260715_184708_628077.jpg"
+}

@@ -1,0 +1,63 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.9738,
+      "confidence_percent": 97.38,
+      "bbox": [
+        15.97,
+        41.23,
+        383.58,
+        225.02
+      ],
+      "allowed": true
+    }
+  ],
+  "best_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9738,
+    "confidence_percent": 97.38,
+    "bbox": [
+      15.97,
+      41.23,
+      383.58,
+      225.02
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9738,
+    "confidence_percent": 97.38,
+    "bbox": [
+      15.97,
+      41.23,
+      383.58,
+      225.02
+    ],
+    "allowed": true
+  },
+  "inference_ms": 404.73,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260715_184713_535501",
+  "timestamp": "2026-07-15T18:47:13",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/EXIT_20260715_184713_535501.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260715_184713_535501.jpg"
+}

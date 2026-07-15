@@ -1,0 +1,141 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.9709,
+      "confidence_percent": 97.09,
+      "bbox": [
+        82.26,
+        42.58,
+        342.49,
+        191.31
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.9494,
+      "confidence_percent": 94.94,
+      "bbox": [
+        248.85,
+        27.99,
+        399.77,
+        128.99
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.9043,
+      "confidence_percent": 90.43,
+      "bbox": [
+        38.35,
+        34.75,
+        58.21,
+        105.94
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.8835,
+      "confidence_percent": 88.35,
+      "bbox": [
+        55.39,
+        32.32,
+        82.6,
+        108.23
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 0,
+      "class": "person",
+      "confidence": 0.8037,
+      "confidence_percent": 80.37,
+      "bbox": [
+        6.83,
+        48.42,
+        15.2,
+        78.63
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.7479,
+      "confidence_percent": 74.79,
+      "bbox": [
+        30.59,
+        54.06,
+        40.73,
+        69.93
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.6151,
+      "confidence_percent": 61.51,
+      "bbox": [
+        150.01,
+        33.1,
+        252.13,
+        69.57
+      ],
+      "allowed": true
+    }
+  ],
+  "best_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9709,
+    "confidence_percent": 97.09,
+    "bbox": [
+      82.26,
+      42.58,
+      342.49,
+      191.31
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9709,
+    "confidence_percent": 97.09,
+    "bbox": [
+      82.26,
+      42.58,
+      342.49,
+      191.31
+    ],
+    "allowed": true
+  },
+  "inference_ms": 348.82,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260715_184654_342684",
+  "timestamp": "2026-07-15T18:46:54",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/EXIT_20260715_184654_342684.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260715_184654_342684.jpg"
+}

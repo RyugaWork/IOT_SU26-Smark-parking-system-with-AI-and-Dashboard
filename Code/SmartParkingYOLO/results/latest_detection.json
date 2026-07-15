@@ -5,13 +5,13 @@
     {
       "class_id": 7,
       "class": "truck",
-      "confidence": 0.806,
-      "confidence_percent": 80.6,
+      "confidence": 0.8557,
+      "confidence_percent": 85.57,
       "bbox": [
-        2.91,
-        151.53,
-        732.81,
-        477.19
+        275.47,
+        332.32,
+        797.44,
+        599.38
       ],
       "allowed": true
     }
@@ -19,30 +19,30 @@
   "best_detection": {
     "class_id": 7,
     "class": "truck",
-    "confidence": 0.806,
-    "confidence_percent": 80.6,
+    "confidence": 0.8557,
+    "confidence_percent": 85.57,
     "bbox": [
-      2.91,
-      151.53,
-      732.81,
-      477.19
+      275.47,
+      332.32,
+      797.44,
+      599.38
     ],
     "allowed": true
   },
   "best_allowed_detection": {
     "class_id": 7,
     "class": "truck",
-    "confidence": 0.806,
-    "confidence_percent": 80.6,
+    "confidence": 0.8557,
+    "confidence_percent": 85.57,
     "bbox": [
-      2.91,
-      151.53,
-      732.81,
-      477.19
+      275.47,
+      332.32,
+      797.44,
+      599.38
     ],
     "allowed": true
   },
-  "inference_ms": 482.04,
+  "inference_ms": 521.3,
   "allowed_classes": [
     "bus",
     "car",
@@ -51,22 +51,22 @@
   ],
   "confidence_threshold": 0.45,
   "img_size": 640,
-  "request_id": "20260715_004359_927643",
-  "timestamp": "2026-07-15T00:44:00",
+  "request_id": "20260715_214942_871801",
+  "timestamp": "2026-07-15T21:49:43",
   "direction": "ENTRY",
   "sequence_id": null,
   "distance_cm": null,
   "object_detected": null,
   "model_path": "yolo26l.pt",
-  "raw_image_path": "results/raw/ENTRY_20260715_004359_927643.jpg",
-  "annotated_image_path": "results/annotated/ENTRY_20260715_004359_927643.jpg",
+  "raw_image_path": "results/raw/ENTRY_20260715_214942_871801.jpg",
+  "annotated_image_path": "results/annotated/ENTRY_20260715_214942_871801.jpg",
   "decision_before_database_rule": "OPEN",
   "database": {
-    "database_enabled": true,
-    "detection_id": 95,
+    "database_enabled": false,
+    "detection_id": null,
     "final_decision": "OPEN",
-    "count_before": 1,
-    "count_after": 2,
+    "count_before": null,
+    "count_after": null,
     "error_message": null
   }
 }

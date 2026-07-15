@@ -1,0 +1,245 @@
+{
+  "decision": "OPEN",
+  "event_status": "OK",
+  "detections": [
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.9008,
+      "confidence_percent": 90.08,
+      "bbox": [
+        354.03,
+        140.45,
+        399.73,
+        180.01
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.8627,
+      "confidence_percent": 86.27,
+      "bbox": [
+        117.91,
+        143.0,
+        155.11,
+        176.13
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.8444,
+      "confidence_percent": 84.44,
+      "bbox": [
+        190.55,
+        61.84,
+        200.29,
+        84.11
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.844,
+      "confidence_percent": 84.4,
+      "bbox": [
+        137.13,
+        128.42,
+        275.65,
+        249.03
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.8201,
+      "confidence_percent": 82.01,
+      "bbox": [
+        258.58,
+        61.89,
+        267.51,
+        85.01
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.785,
+      "confidence_percent": 78.5,
+      "bbox": [
+        369.52,
+        142.53,
+        399.82,
+        230.67
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.7162,
+      "confidence_percent": 71.62,
+      "bbox": [
+        9.77,
+        168.4,
+        36.14,
+        180.48
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.7057,
+      "confidence_percent": 70.57,
+      "bbox": [
+        83.38,
+        19.99,
+        95.41,
+        47.0
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.6851,
+      "confidence_percent": 68.51,
+      "bbox": [
+        36.15,
+        73.22,
+        49.55,
+        104.91
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.6846,
+      "confidence_percent": 68.46,
+      "bbox": [
+        91.02,
+        164.43,
+        111.82,
+        176.39
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.6772,
+      "confidence_percent": 67.72,
+      "bbox": [
+        366.5,
+        107.15,
+        375.07,
+        127.08
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 2,
+      "class": "car",
+      "confidence": 0.6752,
+      "confidence_percent": 67.52,
+      "bbox": [
+        292.94,
+        153.87,
+        358.09,
+        169.24
+      ],
+      "allowed": true
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.5903,
+      "confidence_percent": 59.03,
+      "bbox": [
+        129.15,
+        0.36,
+        144.92,
+        7.84
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.5672,
+      "confidence_percent": 56.72,
+      "bbox": [
+        213.34,
+        0.3,
+        229.38,
+        7.64
+      ],
+      "allowed": false
+    },
+    {
+      "class_id": 9,
+      "class": "traffic light",
+      "confidence": 0.5621,
+      "confidence_percent": 56.21,
+      "bbox": [
+        37.65,
+        0.47,
+        51.55,
+        16.26
+      ],
+      "allowed": false
+    }
+  ],
+  "best_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9008,
+    "confidence_percent": 90.08,
+    "bbox": [
+      354.03,
+      140.45,
+      399.73,
+      180.01
+    ],
+    "allowed": true
+  },
+  "best_allowed_detection": {
+    "class_id": 2,
+    "class": "car",
+    "confidence": 0.9008,
+    "confidence_percent": 90.08,
+    "bbox": [
+      354.03,
+      140.45,
+      399.73,
+      180.01
+    ],
+    "allowed": true
+  },
+  "inference_ms": 383.14,
+  "allowed_classes": [
+    "bus",
+    "car",
+    "motorcycle",
+    "truck"
+  ],
+  "confidence_threshold": 0.45,
+  "img_size": 640,
+  "request_id": "20260715_184656_887420",
+  "timestamp": "2026-07-15T18:46:57",
+  "direction": "EXIT",
+  "sequence_id": null,
+  "distance_cm": null,
+  "object_detected": null,
+  "model_path": "yolo26l.pt",
+  "raw_image_path": "results/raw/EXIT_20260715_184656_887420.jpg",
+  "annotated_image_path": "results/annotated/EXIT_20260715_184656_887420.jpg"
+}
