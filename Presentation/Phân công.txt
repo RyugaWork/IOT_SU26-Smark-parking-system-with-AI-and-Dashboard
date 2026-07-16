@@ -16,3 +16,17 @@ Evidence là capture AI chat logs
 
 Thông tin về lựa chọn đề tài: 
 Tìm hiểu bài báo -> tích hợp tất cả tính năng của các project xưa.
+
+
+Slide 1 - 2 Long
+Slide 3 - 4 Triết
+Slide 5 - 9 Long
+Slide 10-12 Mẫn
+Slide 13-15 Khoa
+
+Introduction
+	Giới thiệu về background
+	Đánh giá các bài báo khác
+	Điểm nổi bậc
+	Hướng giải quyết
+	Scope
