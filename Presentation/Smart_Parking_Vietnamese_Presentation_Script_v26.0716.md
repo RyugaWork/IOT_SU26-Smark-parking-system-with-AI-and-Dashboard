@@ -14,10 +14,14 @@
 | Thành viên | Slide | Nội dung |
 |---|---:|---|
 | **Bùi Đình Long** | 1–2 | Giới thiệu đề tài, thành viên và vai trò |
-| **Đỗ Thành Triết** | 3–4 | Background, vấn đề thực tế và hạn chế của hệ thống cũ |
-| **Bùi Đình Long** | 5–9 | Mục tiêu, hướng giải quyết, scope, block diagram, architecture, circuit và flowchart |
-| **Nguyễn Sỹ Minh Mẫn** | 10–12 | ERD, dashboard và prototype phần cứng |
-| **Trần Đăng Khoa** | 13–15 | Phương pháp kiểm thử, kết quả, kết luận và future work |
+| **Đỗ Thành Triết** | 3–5 | Background, vấn đề thực tế và hạn chế của hệ thống truyền thống, Mục tiêu, hướng giải quyết, scope,|
+| **Bùi Đình Long** | 6–12 |  block diagram, architecture, circuit và flowchart |
+| **Nguyễn Sỹ Minh Mẫn** | 13–14 | ERD, dashboard và prototype phần cứng |
+| **Trần Đăng Khoa** | 14–18 | Phương pháp kiểm thử, kết quả, kết luận và future work |
+
+| **All** | 19–20 | Demo sản phẩm |
+| **Nguyễn Sỹ Minh Mẫn** | Giới thiệu về flow, và chạy
+| **Trần Đăng Khoa** | Refesh web và giải th
 
 ---
 

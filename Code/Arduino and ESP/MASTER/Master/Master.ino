@@ -214,7 +214,7 @@ void loop() {
 
     case OPEN_HOLD:
       if (now - gateOpenedMs >= GATE_HOLD_MS) {
-        closeGate();
+        // closeGate();
         showStatus("Gate Closed", "Move Vehicle");
         enterWaitObjectClear();
       }
